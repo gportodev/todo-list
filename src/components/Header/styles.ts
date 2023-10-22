@@ -3,7 +3,10 @@ import Colors from '../../constants/Colors';
 
 export default StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: Colors.gray600,
+    height: 173,
+    width: '100%',
+    backgroundColor: Colors.gray700,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

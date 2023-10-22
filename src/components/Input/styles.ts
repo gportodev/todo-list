@@ -5,10 +5,12 @@ import { Sizes } from '../../constants/Size';
 
 export default StyleSheet.create({
   container: {
-    width: 451,
+    flexGrow: 0.95,
     height: 54,
     backgroundColor: Colors.gray500,
-    borderRadius: 8,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: Colors.gray700,
     padding: 16,
     alignItems: 'center',
     gap: 8,

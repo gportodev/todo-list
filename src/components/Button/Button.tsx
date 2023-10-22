@@ -1,13 +1,15 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableHighlight } from 'react-native';
 import { type Props } from './types';
 import { Icon } from '../Icon';
+import Colors from '../../constants/Colors';
 
-function Button({ iconProps, style }: Props): JSX.Element {
+function Button({ iconProps, style, onPress }: Props): JSX.Element {
   const { name, color, size } = iconProps;
 
   return (
-    <TouchableOpacity
+    <TouchableHighlight
+      underlayColor={Colors.blue}
       style={[
         style,
         {
@@ -15,9 +17,10 @@ function Button({ iconProps, style }: Props): JSX.Element {
           justifyContent: 'center',
         },
       ]}
+      onPress={onPress}
     >
       <Icon name={name} color={color} size={size} />
-    </TouchableOpacity>
+    </TouchableHighlight>
   );
 }
 
