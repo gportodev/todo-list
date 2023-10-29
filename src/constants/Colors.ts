@@ -11,4 +11,11 @@ export default {
   gray200: '#D9D9D9',
   gray100: '#F2F2F2',
   danger: '#E25858',
+
+  hoverColor: {
+    unchecked: 'rgba(30, 111, 159, 0.2)',
+    checked: '#8284FA',
+    delete: '#333333',
+    create: '#4EA8DE',
+  },
 };

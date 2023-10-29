@@ -2,14 +2,13 @@ import React from 'react';
 import { TouchableHighlight } from 'react-native';
 import { type Props } from './types';
 import { Icon } from '../Icon';
-import Colors from '../../constants/Colors';
 
-function Button({ iconProps, style, onPress }: Props): JSX.Element {
+function Button({ iconProps, style, onPress, ...rest }: Props): JSX.Element {
   const { name, color, size } = iconProps;
 
   return (
     <TouchableHighlight
-      underlayColor={Colors.blue}
+      {...rest}
       style={[
         style,
         {

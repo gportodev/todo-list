@@ -1,8 +1,8 @@
 import { type Props as IconsProps } from '../Icon/types';
-import { type TouchableOpacityProps } from 'react-native';
+import { type TouchableHighlightProps } from 'react-native';
 
 type Props = {
   iconProps: IconsProps;
-} & TouchableOpacityProps;
+} & TouchableHighlightProps;
 
 export type { Props };
