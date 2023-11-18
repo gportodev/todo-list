@@ -14,8 +14,35 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     bottom: 32,
   },
+  flatHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  flatHeaderText: {
+    fontFamily: Fonts.bold,
+    fontSize: Sizes.medium,
+    color: Colors.blue,
+  },
+  wrap: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  counterView: {
+    width: 24,
+    height: 19,
+    backgroundColor: Colors.gray400,
+    borderRadius: 999,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  counterText: {
+    color: Colors.gray200,
+    fontFamily: Fonts.bold,
+    fontSize: Sizes.small,
+  },
   item: {
-    width: 327,
+    width: '100%',
     height: 64,
     backgroundColor: Colors.gray500,
     flexDirection: 'row',

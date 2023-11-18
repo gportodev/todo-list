@@ -3,23 +3,50 @@ import { TouchableHighlight } from 'react-native';
 import { type Props } from './types';
 import { Icon } from '../Icon';
 
-function Button({ iconProps, style, onPress, ...rest }: Props): JSX.Element {
-  const { name, color, size } = iconProps;
-
+function Button({
+  svgIcon,
+  iconProps,
+  style,
+  onPress,
+  ...rest
+}: Props): JSX.Element {
   return (
-    <TouchableHighlight
-      {...rest}
-      style={[
-        style,
-        {
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-      ]}
-      onPress={onPress}
-    >
-      <Icon name={name} color={color} size={size} />
-    </TouchableHighlight>
+    <>
+      {svgIcon !== undefined ? (
+        <TouchableHighlight
+          {...rest}
+          style={[
+            style,
+            {
+              alignItems: 'center',
+              justifyContent: 'center',
+            },
+          ]}
+          onPress={onPress}
+        >
+          {svgIcon}
+        </TouchableHighlight>
+      ) : (
+        <TouchableHighlight
+          {...rest}
+          style={[
+            style,
+            {
+              alignItems: 'center',
+              justifyContent: 'center',
+            },
+          ]}
+          onPress={onPress}
+        >
+          <Icon
+            family={iconProps?.family}
+            name={iconProps?.name}
+            color={iconProps?.color}
+            size={iconProps?.size}
+          />
+        </TouchableHighlight>
+      )}
+    </>
   );
 }
 
