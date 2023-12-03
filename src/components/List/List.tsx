@@ -200,7 +200,6 @@ function List(): JSX.Element {
               style={{
                 height: 40,
                 width: '80%',
-                backgroundColor: 'red',
               }}
             >
               <Text
