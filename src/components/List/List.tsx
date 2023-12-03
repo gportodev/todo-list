@@ -20,24 +20,24 @@ function List(): JSX.Element {
   const [itemUnderlay, setItemUnderlay] = useState(0);
 
   const [arr, setArr] = useState<Item[]>([
-    // {
-    //   id: 1,
-    //   description:
-    //     'Integer urna interdum massa libero auctor neque turpis turpis semper.',
-    //   finished: false,
-    // },
-    // {
-    //   id: 2,
-    //   description:
-    //     'Integer urna interdum massa libero auctor neque turpis turpis semper.',
-    //   finished: false,
-    // },
-    // {
-    //   id: 3,
-    //   description:
-    //     'Integer urna interdum massa libero auctor neque turpis turpis semper.',
-    //   finished: false,
-    // },
+    {
+      id: 1,
+      description:
+        'Integer urna interdum massa libero auctor neque turpis turpis semper.',
+      finished: false,
+    },
+    {
+      id: 2,
+      description:
+        'Integer urna interdum massa libero auctor neque turpis turpis semper.',
+      finished: false,
+    },
+    {
+      id: 3,
+      description:
+        'Integer urna interdum massa libero auctor neque turpis turpis semper.',
+      finished: false,
+    },
   ]);
 
   const checkTask = (id: number): void => {
@@ -71,6 +71,12 @@ function List(): JSX.Element {
     }
   };
 
+  const tasksCalculator = () => {
+    const doneTasks = arr.filter(task => task.finished).length;
+
+    return doneTasks;
+  };
+
   const renderHeader = (): JSX.Element => (
     <View style={styles.flatHeader}>
       <View style={styles.wrap}>
@@ -86,7 +92,7 @@ function List(): JSX.Element {
         </Text>
 
         <View style={styles.counterView}>
-          <Text style={styles.counterText}>3</Text>
+          <Text style={styles.counterText}>{arr.length}</Text>
         </View>
       </View>
 
@@ -110,7 +116,7 @@ function List(): JSX.Element {
             },
           ]}
         >
-          <Text style={styles.counterText}>3</Text>
+          <Text style={styles.counterText}>{tasksCalculator()}</Text>
         </View>
       </View>
     </View>
@@ -172,7 +178,17 @@ function List(): JSX.Element {
               svgIcon={renderCheck(item)}
             />
 
-            <Text style={styles.text}>{item.description}</Text>
+            <Text
+              style={[
+                styles.text,
+                {
+                  color: item.finished ? Colors.gray300 : Colors.gray100,
+                  textDecorationLine: item.finished ? 'line-through' : 'none',
+                },
+              ]}
+            >
+              {item.description}
+            </Text>
 
             <Button
               id={item.id.toString()}
