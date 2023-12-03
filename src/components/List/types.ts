@@ -1,5 +1,5 @@
 type Item = {
-  id: number;
+  id: string | number[];
   description: string;
   finished: boolean;
 };

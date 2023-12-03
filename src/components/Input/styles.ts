@@ -6,6 +6,7 @@ import { Sizes } from '../../constants/Size';
 export default StyleSheet.create({
   container: {
     flexGrow: 0.95,
+    width: 271,
     height: 54,
     backgroundColor: Colors.gray500,
     borderRadius: 6,

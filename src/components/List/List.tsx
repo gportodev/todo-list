@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import uuid from 'react-native-uuid';
+
 import { FlatList, View, Text } from 'react-native';
 import { styles } from './styles';
 import Colors from '../../constants/Colors';
@@ -16,31 +18,32 @@ import { type Item } from './types';
 import { EmptyMessage } from './EmptyMessage';
 
 function List(): JSX.Element {
-  const [state, setState] = useState(0);
-  const [itemUnderlay, setItemUnderlay] = useState(0);
+  const [state, setState] = useState<string | number[]>();
+  const [itemUnderlay, setItemUnderlay] = useState<string | number[]>();
+  const [input, setInput] = useState<string>('');
 
   const [arr, setArr] = useState<Item[]>([
     {
-      id: 1,
+      id: uuid.v4(),
+      description:
+        'Integer urna interdum massa libero 1 2 3 neque turpis turpis semper.',
+      finished: false,
+    },
+    {
+      id: uuid.v4(),
       description:
         'Integer urna interdum massa libero auctor neque turpis turpis semper.',
       finished: false,
     },
     {
-      id: 2,
-      description:
-        'Integer urna interdum massa libero auctor neque turpis turpis semper.',
-      finished: false,
-    },
-    {
-      id: 3,
+      id: uuid.v4(),
       description:
         'Integer urna interdum massa libero auctor neque turpis turpis semper.',
       finished: false,
     },
   ]);
 
-  const checkTask = (id: number): void => {
+  const checkTask = (id: string | number[]): void => {
     const newArr = arr.map(item => {
       if (item.id === id) {
         const newItem = {
@@ -71,10 +74,26 @@ function List(): JSX.Element {
     }
   };
 
-  const tasksCalculator = () => {
+  const tasksCalculator = (): number => {
     const doneTasks = arr.filter(task => task.finished).length;
 
     return doneTasks;
+  };
+
+  const addTask = (): void => {
+    const newItem: Item = {
+      id: uuid.v4(),
+      description: input,
+      finished: false,
+    };
+
+    setArr(arr => [...arr, newItem]);
+  };
+
+  const deleteTask = (id: string | number[]): void => {
+    const newList = arr.filter(task => task.id !== id);
+
+    setArr(newList);
   };
 
   const renderHeader = (): JSX.Element => (
@@ -132,8 +151,9 @@ function List(): JSX.Element {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Input />
+        <Input value={input} onChangeText={setInput} />
         <Button
+          disabled={input === ''}
           underlayColor={Colors.blue}
           style={{
             backgroundColor: Colors.blueDark,
@@ -147,20 +167,18 @@ function List(): JSX.Element {
             color: 'white',
             size: 16,
           }}
-          onPress={() => {
-            console.log('batata');
-          }}
+          onPress={addTask}
         />
       </View>
 
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={arr}
         ListHeaderComponent={renderHeader}
         ListEmptyComponent={() => <EmptyMessage />}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <Button
-              key={item.id}
               underlayColor={'none'}
               style={{
                 borderRadius: 9,
@@ -173,22 +191,30 @@ function List(): JSX.Element {
               onPressOut={() => {
                 checkTask(item.id);
 
-                setItemUnderlay(0);
+                setItemUnderlay('');
               }}
               svgIcon={renderCheck(item)}
             />
 
-            <Text
-              style={[
-                styles.text,
-                {
-                  color: item.finished ? Colors.gray300 : Colors.gray100,
-                  textDecorationLine: item.finished ? 'line-through' : 'none',
-                },
-              ]}
+            <View
+              style={{
+                height: 40,
+                width: '80%',
+                backgroundColor: 'red',
+              }}
             >
-              {item.description}
-            </Text>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    color: item.finished ? Colors.gray300 : Colors.gray100,
+                    textDecorationLine: item.finished ? 'line-through' : 'none',
+                  },
+                ]}
+              >
+                {item.description}
+              </Text>
+            </View>
 
             <Button
               id={item.id.toString()}
@@ -197,10 +223,10 @@ function List(): JSX.Element {
                 setState(item.id);
               }}
               onHideUnderlay={() => {
-                setState(0);
+                setState('');
               }}
               onPress={() => {
-                console.log('deletou');
+                deleteTask(item.id);
               }}
               style={{
                 width: 32,
