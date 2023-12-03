@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import uuid from 'react-native-uuid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { FlatList, View, Text } from 'react-native';
+import { FlatList, View, Text, Alert } from 'react-native';
 import { styles } from './styles';
 import Colors from '../../constants/Colors';
 import { Button } from '../Button';
@@ -22,28 +23,9 @@ function List(): JSX.Element {
   const [itemUnderlay, setItemUnderlay] = useState<string | number[]>();
   const [input, setInput] = useState<string>('');
 
-  const [arr, setArr] = useState<Item[]>([
-    {
-      id: uuid.v4(),
-      description:
-        'Integer urna interdum massa libero 1 2 3 neque turpis turpis semper.',
-      finished: false,
-    },
-    {
-      id: uuid.v4(),
-      description:
-        'Integer urna interdum massa libero auctor neque turpis turpis semper.',
-      finished: false,
-    },
-    {
-      id: uuid.v4(),
-      description:
-        'Integer urna interdum massa libero auctor neque turpis turpis semper.',
-      finished: false,
-    },
-  ]);
+  const [arr, setArr] = useState<Item[]>([]);
 
-  const checkTask = (id: string | number[]): void => {
+  const checkTask = async (id: string | number[]): Promise<void> => {
     const newArr = arr.map(item => {
       if (item.id === id) {
         const newItem = {
@@ -56,7 +38,7 @@ function List(): JSX.Element {
       return item;
     });
 
-    setArr(newArr);
+    await saveList(newArr);
   };
 
   const renderCheck = (item: Item): JSX.Element => {
@@ -80,20 +62,30 @@ function List(): JSX.Element {
     return doneTasks;
   };
 
-  const addTask = (): void => {
+  const addTask = async (): Promise<void> => {
     const newItem: Item = {
       id: uuid.v4(),
       description: input,
       finished: false,
     };
 
-    setArr(arr => [...arr, newItem]);
+    arr.push(newItem);
+
+    try {
+      await saveList(arr);
+    } catch (error) {
+      Alert.alert('Erro', 'Houve um erro ao salvar a lista!');
+    }
   };
 
-  const deleteTask = (id: string | number[]): void => {
+  const deleteTask = async (id: string | number[]): Promise<void> => {
     const newList = arr.filter(task => task.id !== id);
 
-    setArr(newList);
+    try {
+      await saveList(newList);
+    } catch (error) {
+      Alert.alert('Erro', 'Houve um erro ao salvar a lista!');
+    }
   };
 
   const renderHeader = (): JSX.Element => (
@@ -148,6 +140,35 @@ function List(): JSX.Element {
     return <Trash />;
   };
 
+  const saveList = async (list: Item[]): Promise<void> => {
+    try {
+      const jsonList = JSON.stringify(list);
+      await AsyncStorage.setItem('list', jsonList);
+    } catch (error) {
+      Alert.alert('Erro', 'Houve um erro ao salvar a lista!');
+    } finally {
+      await getList();
+    }
+  };
+
+  const getList = async (): Promise<void> => {
+    try {
+      const list = await AsyncStorage.getItem('list');
+
+      if (list !== null) {
+        const parsedList = JSON.parse(list);
+
+        setArr(parsedList);
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Houve um erro ao trazer a lista!');
+    }
+  };
+
+  useEffect(() => {
+    void getList();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -167,7 +188,9 @@ function List(): JSX.Element {
             color: 'white',
             size: 16,
           }}
-          onPress={addTask}
+          onPress={async () => {
+            await addTask();
+          }}
         />
       </View>
 
@@ -188,8 +211,8 @@ function List(): JSX.Element {
               onPressIn={() => {
                 setItemUnderlay(item.id);
               }}
-              onPressOut={() => {
-                checkTask(item.id);
+              onPressOut={async () => {
+                await checkTask(item.id);
 
                 setItemUnderlay('');
               }}
@@ -224,8 +247,8 @@ function List(): JSX.Element {
               onHideUnderlay={() => {
                 setState('');
               }}
-              onPress={() => {
-                deleteTask(item.id);
+              onPress={async () => {
+                await deleteTask(item.id);
               }}
               style={{
                 width: 32,
